@@ -2,9 +2,15 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System;
+using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
-public class CarControllerTemp : MonoBehaviour
+public class CarControllerTemp : MonoBehaviour, CarControls.IPlayerActions
 {
+    private InputActionAsset inputAseet;
+    private InputActionMap player;
+    private InputAction move;
+
     public List<AxleInfo> axleInfos; // the information about each individual axle
     public float maxMotorTorque; // maximum torque the motor can apply to wheel
     public float maxSteeringAngle; // maximum steer angle the wheel can have
@@ -19,6 +25,16 @@ public class CarControllerTemp : MonoBehaviour
     private WheelFrictionCurve forwardFriction, sidewaysFriction;
     private float driftFactor;
     public float handBrakeFrictionMultiplier = 2f;
+
+    private Vector2 moveComposite;
+    private Vector2 lookComposite;
+    private Action accelerateAction;
+    private Action brakeAction;
+    private Action fireHookAction;
+    private Action resetAction;
+
+    private CarControls carControls;
+
 
     // finds the corresponding visual wheel
     // correctly applies the transform
@@ -39,6 +55,12 @@ public class CarControllerTemp : MonoBehaviour
         visualWheel.transform.rotation = rotation;
     }
 
+    private void Awake()
+    {
+        inputAseet = this.GetComponent<PlayerInput>().actions;
+        player = inputAseet.FindActionMap("Car");
+    }
+
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -47,8 +69,8 @@ public class CarControllerTemp : MonoBehaviour
 
     public void FixedUpdate()
     {
-        float motor = maxMotorTorque * Input.GetAxis("Vertical");
-        float steering = maxSteeringAngle * Input.GetAxis("Horizontal");
+        float motor = maxMotorTorque * moveComposite.y;
+        float steering = maxSteeringAngle * moveComposite.x;
 
         foreach (AxleInfo axleInfo in axleInfos)
         {
@@ -90,6 +112,26 @@ public class CarControllerTemp : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.F)){
             ResetCar();
         }
+    }
+
+    
+
+    private void OnEnable()
+    {
+        //player.FindAction("Accelerate").started += Accelerate;
+        if (carControls != null)
+            return;
+
+        carControls = new CarControls();
+        carControls.Player.SetCallbacks(this);
+        carControls.Player.Enable();
+
+    }
+
+    private void OnDisable()
+    {
+        //player.FindAction("Accelerate").started -= Accelerate;
+        carControls.Player.Disable();
     }
 
     private void ResetCar()
@@ -171,6 +213,62 @@ public class CarControllerTemp : MonoBehaviour
         }
 
     }
+
+    public void OnAccelerate(InputAction.CallbackContext context)
+    {
+        if (!context.performed)
+            return;
+
+        accelerateAction?.Invoke();
+    }
+
+    public void OnReverse(InputAction.CallbackContext context)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void OnBrake(InputAction.CallbackContext context)
+    {
+        if (!context.performed)
+            return;
+
+        brakeAction?.Invoke();
+    }
+
+    public void OnFireHook(InputAction.CallbackContext context)
+    {
+        if (!context.performed)
+            return;
+
+        fireHookAction?.Invoke();
+    }
+
+    public void OnResetCar(InputAction.CallbackContext context)
+    {
+        if (!context.performed)
+            return;
+
+        resetAction?.Invoke();
+    }
+    public void OnLook()
+    {
+
+    }
+    public void OnMove()
+    {
+
+    }
+    public void OnLook(InputAction.CallbackContext context)
+    {
+        lookComposite = context.ReadValue<Vector2>();
+    }
+
+    public void OnMove(InputAction.CallbackContext context)
+    {
+        moveComposite = context.ReadValue<Vector2>();
+    }
+
+    
 }
 
 [System.Serializable]

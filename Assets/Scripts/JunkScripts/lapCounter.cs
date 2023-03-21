@@ -15,12 +15,12 @@ public class lapCounter : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
     private void OnTriggerEnter(Collider other)
-    { 
+    {
         Debug.Log(1);
-        if(other.gameObject.name == "Body")
+        if (other.gameObject.name == "Body")
         {
             Debug.Log(2);
             lapNum++;

@@ -6,17 +6,7 @@ EditorUserSettings:
   serializedVersion: 4
   m_ConfigSettings:
     RecentlyUsedSceneGuid-0:
-      value: 5a5757560101590a5d0c0e24427b5d44434e4c7a7b7a23677f2b4565b7b5353a
-      flags: 0
-    RecentlyUsedSceneGuid-1:
-<<<<<<< Updated upstream:UserSettings/EditorUserSettings.asset
-      value: 07050503550d5d5a085a547711205a44144e1d287d7b73647c2a4c67e7e6353a
-      flags: 0
-    RecentlyUsedSceneGuid-2:
-      value: 5b0650525200500c5e5d0d2011720f44444e4c297f7d73337b791e66e1e63239
-=======
       value: 5b09005456535d5a5857087046770b44464e4b7d7f787168747f1932b6e5356d
->>>>>>> Stashed changes:BizzareRace/UserSettings/EditorUserSettings.asset
       flags: 0
     vcSharedLogLevel:
       value: 0d5e400f0650

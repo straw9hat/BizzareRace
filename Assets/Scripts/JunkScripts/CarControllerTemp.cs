@@ -5,9 +5,9 @@ using System;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
-public class CarControllerTemp : MonoBehaviour, CarControls.IPlayerActions
+public class CarControllerTemp : MonoBehaviour
 {
-    private InputActionAsset inputAseet;
+    private PlayerInput playerInput;
     private InputActionMap player;
     private InputAction move;
 
@@ -26,14 +26,8 @@ public class CarControllerTemp : MonoBehaviour, CarControls.IPlayerActions
     private float driftFactor;
     public float handBrakeFrictionMultiplier = 2f;
 
-    private Vector2 moveComposite;
-    private Vector2 lookComposite;
-    private Action accelerateAction;
-    private Action brakeAction;
-    private Action fireHookAction;
-    private Action resetAction;
 
-    private CarControls carControls;
+
 
 
     // finds the corresponding visual wheel
@@ -57,8 +51,8 @@ public class CarControllerTemp : MonoBehaviour, CarControls.IPlayerActions
 
     private void Awake()
     {
-        inputAseet = this.GetComponent<PlayerInput>().actions;
-        player = inputAseet.FindActionMap("Car");
+        playerInput = this.GetComponent<PlayerInput>();
+        //player = inputAseet.FindActionMap("Car");
     }
 
     private void Start()
@@ -69,8 +63,8 @@ public class CarControllerTemp : MonoBehaviour, CarControls.IPlayerActions
 
     public void FixedUpdate()
     {
-        float motor = maxMotorTorque * moveComposite.y;
-        float steering = maxSteeringAngle * moveComposite.x;
+        float motor = maxMotorTorque * playerInput.actions["Move"].ReadValue<Vector2>().y;
+        float steering = maxSteeringAngle * playerInput.actions["Move"].ReadValue<Vector2>().x;
 
         foreach (AxleInfo axleInfo in axleInfos)
         {
@@ -109,9 +103,10 @@ public class CarControllerTemp : MonoBehaviour, CarControls.IPlayerActions
     }
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.F)){
+        if (playerInput.actions["ResetCar"].WasPerformedThisFrame()){
             ResetCar();
         }
+        adjustTraction();
     }
 
     
@@ -119,19 +114,14 @@ public class CarControllerTemp : MonoBehaviour, CarControls.IPlayerActions
     private void OnEnable()
     {
         //player.FindAction("Accelerate").started += Accelerate;
-        if (carControls != null)
-            return;
-
-        carControls = new CarControls();
-        carControls.Player.SetCallbacks(this);
-        carControls.Player.Enable();
+        
 
     }
 
     private void OnDisable()
     {
         //player.FindAction("Accelerate").started -= Accelerate;
-        carControls.Player.Disable();
+        
     }
 
     private void ResetCar()
@@ -146,7 +136,7 @@ public class CarControllerTemp : MonoBehaviour, CarControls.IPlayerActions
         //tine it takes to go from normal drive to drift 
         float driftSmothFactor = .7f * Time.deltaTime;
 
-        if (Input.GetKey(KeyCode.Space))
+        if (playerInput.actions["Brake"].WasPerformedThisFrame())
         {
             sidewaysFriction = WheelL.sidewaysFriction;
             forwardFriction = WheelL.forwardFriction;
@@ -214,59 +204,6 @@ public class CarControllerTemp : MonoBehaviour, CarControls.IPlayerActions
 
     }
 
-    public void OnAccelerate(InputAction.CallbackContext context)
-    {
-        if (!context.performed)
-            return;
-
-        accelerateAction?.Invoke();
-    }
-
-    public void OnReverse(InputAction.CallbackContext context)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void OnBrake(InputAction.CallbackContext context)
-    {
-        if (!context.performed)
-            return;
-
-        brakeAction?.Invoke();
-    }
-
-    public void OnFireHook(InputAction.CallbackContext context)
-    {
-        if (!context.performed)
-            return;
-
-        fireHookAction?.Invoke();
-    }
-
-    public void OnResetCar(InputAction.CallbackContext context)
-    {
-        if (!context.performed)
-            return;
-
-        resetAction?.Invoke();
-    }
-    public void OnLook()
-    {
-
-    }
-    public void OnMove()
-    {
-
-    }
-    public void OnLook(InputAction.CallbackContext context)
-    {
-        lookComposite = context.ReadValue<Vector2>();
-    }
-
-    public void OnMove(InputAction.CallbackContext context)
-    {
-        moveComposite = context.ReadValue<Vector2>();
-    }
 
     
 }

@@ -1,9 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem.Controls;
 
 public class GameStateMainMenu : GameState
 {
+    private GameObject mainMenu;
     public GameStateMainMenu(StateManager stateManager) : base("MainMenu", stateManager)
     {
 
@@ -17,6 +19,7 @@ public class GameStateMainMenu : GameState
     public override void OnEnter()
     {
         base.OnEnter();
+        mainMenu = GameObject.Find("MainMenu");
         GameEventManager.MainMenuEvent += startGameTimer;
         Debug.Log("Entered Main Menu");
     }
@@ -24,6 +27,7 @@ public class GameStateMainMenu : GameState
     public override void OnExit()
     {
         base.OnExit();
+        mainMenu.SetActive(false);
         GameEventManager.MainMenuEvent -= startGameTimer;
         Debug.Log("Exited Main Menu");
     }
@@ -31,7 +35,7 @@ public class GameStateMainMenu : GameState
     public override void Update()
     {
         base.Update();
-        if(Input.GetKeyDown(KeyCode.Alpha1))
+        if(Input.anyKey)
         {
             startGameTimer();
         }

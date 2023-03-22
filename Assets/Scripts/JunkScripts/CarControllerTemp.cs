@@ -204,8 +204,40 @@ public class CarControllerTemp : MonoBehaviour
 
     }
 
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.name == "Respawn1")
+        {
+            this.transform.position = new Vector3(-10f, -2.5f, -1.5f);
+            this.transform.rotation = new Quaternion(0, -90, 0, 0);
+        }
+        if (collision.gameObject.name == "Respawn2")
+        {
+            this.transform.position = new Vector3(45f, 0f, 65f);
+            this.transform.rotation = new Quaternion(0, -90, 0, 0);
+        }
+        if (collision.gameObject.name == "Respawn3")
+        {
+            this.transform.position = new Vector3(-4.5f, 23.5f, 91.5f);
+            this.transform.rotation = new Quaternion(0, -90, 0, 0);
+        }
+        if (collision.gameObject.name == "Respawn4")
+        {
+            this.transform.position = new Vector3(-200f, 11.5f, 31.5f);
+            this.transform.rotation = new Quaternion(0, -180, 0, 0);
+        }
+        if (collision.gameObject.name == "Respawn5")
+        {
+            this.transform.position = new Vector3(-33.5f, 48.5f, -52f);
+            this.transform.rotation = new Quaternion(0, -210, 0, 0);
+        }
+        if (collision.gameObject.name == "Terrain")
+        {
+            this.transform.position = new Vector3(45f, 0f, 65f);
+            this.transform.rotation = new Quaternion(0, -90, 0, 0);
+        }
+    }
 
-    
 }
 
 [System.Serializable]

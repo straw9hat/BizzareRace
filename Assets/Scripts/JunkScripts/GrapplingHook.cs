@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityStandardAssets.Characters.FirstPerson;
 
 public class GrapplingHook : MonoBehaviour {
@@ -28,12 +29,17 @@ public class GrapplingHook : MonoBehaviour {
 
 	public bool fly;
 
+    private PlayerInput playerInput;
 
+	private void Start()
+	{
+        playerInput = this.GetComponent<PlayerInput>();
+    }
 
 	void Update()
 	{
 
-		fly = Input.GetMouseButton(0);
+		fly = playerInput.actions["FireHook"].WasPerformedThisFrame();
 
 
 		if (fly && fired == false)
@@ -58,19 +64,38 @@ public class GrapplingHook : MonoBehaviour {
 
 		if (hooked == true) 
 		{
-			hook.transform.parent = hookedObj.transform;
+			if(hookedObj.gameObject.tag == "Player")
+			{
+                hook.transform.parent = hookedObj.transform;
 
-			Vector3 tempPos = hook.transform.position;
-			tempPos.y += 8;
+                Vector3 tempPos = hook.transform.position;
 
 
-			transform.position = Vector3.MoveTowards (transform.position, tempPos, Time.deltaTime * playerTravelSpeed);
-			float distanceToHook = Vector3.Distance (transform.position, tempPos);
+                transform.position = Vector3.MoveTowards(transform.position, tempPos, Time.deltaTime * playerTravelSpeed);
+                float distanceToHook = Vector3.Distance(transform.position, tempPos);
 
-			this.GetComponent<Rigidbody>().useGravity = false;
+                this.GetComponent<Rigidbody>().useGravity = true;
 
-			if (distanceToHook < 2)
-				ReturnHook ();
+                if (distanceToHook < 2)
+                    ReturnHook();
+            }
+			else
+			{
+                hook.transform.parent = hookedObj.transform;
+
+                Vector3 tempPos = hook.transform.position;
+                tempPos.y += 6;
+
+
+                transform.position = Vector3.MoveTowards(transform.position, tempPos, Time.deltaTime * playerTravelSpeed);
+                float distanceToHook = Vector3.Distance(transform.position, tempPos);
+
+                this.GetComponent<Rigidbody>().useGravity = false;
+
+                if (distanceToHook < 2)
+                    ReturnHook();
+            }
+			
 		} 
 		else 
 		{
@@ -97,4 +122,5 @@ public class GrapplingHook : MonoBehaviour {
 	{
 		hook.transform.parent = hookHolder.transform;
 	}
+	
 }

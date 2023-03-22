@@ -31,7 +31,7 @@ public class GameStateRacing : GameState
     public override void Update()
     {
         base.Update();
-        if (Input.GetKeyDown(KeyCode.Alpha3))
+        if (lapCounter.lapNum == 3)
         {
             showRaceResults();
         }

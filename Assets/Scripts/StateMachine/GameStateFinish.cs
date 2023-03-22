@@ -18,6 +18,16 @@ public class GameStateFinish : GameState
     public override void OnEnter()
     {
         base.OnEnter();
+        if (GameObject.Find("Car").transform.position.z > 0)
+        {
+            Utils.FindIncludingInactive("FinishScreen").SetActive(true);
+            Utils.FindIncludingInactive("P1Win").SetActive(true);
+        }
+        else
+        {
+            Utils.FindIncludingInactive("FinishScreen").SetActive(true);
+            Utils.FindIncludingInactive("P2Win").SetActive(true);
+        }
         GameEventManager.FinishEvent += restartGame;
         Debug.Log("Entered results");
     }
@@ -25,6 +35,9 @@ public class GameStateFinish : GameState
     public override void OnExit()
     {
         base.OnExit();
+        Utils.FindIncludingInactive("FinishScreen").SetActive(false);
+        Utils.FindIncludingInactive("P1Win").SetActive(false);
+        Utils.FindIncludingInactive("P2Win").SetActive(false);
         GameEventManager.FinishEvent -= restartGame;
         Debug.Log("Exited results");
     }
@@ -32,7 +45,7 @@ public class GameStateFinish : GameState
     public override void Update()
     {
         base.Update();
-        if (Input.GetKeyDown(KeyCode.Alpha4))
+        if (Input.anyKey)
         {
             restartGame();
         }

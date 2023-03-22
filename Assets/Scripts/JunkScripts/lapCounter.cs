@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class lapCounter : MonoBehaviour
 {
-    public int lapNum;
+    public static int lapNum;
     // Start is called before the first frame update
     void Start()
     {
@@ -20,7 +20,7 @@ public class lapCounter : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         Debug.Log(1);
-        if (other.gameObject.name == "Body")
+        if (other.gameObject.name == "Car" || other.gameObject.name == "Car(Clone)")
         {
             Debug.Log(2);
             lapNum++;
@@ -30,7 +30,7 @@ public class lapCounter : MonoBehaviour
     }
     IEnumerator LapCouroutine()
     {
-        yield return new WaitForSeconds(5);
+        yield return new WaitForSeconds(30);
         this.GetComponent<BoxCollider>().enabled = true;
     }
 }

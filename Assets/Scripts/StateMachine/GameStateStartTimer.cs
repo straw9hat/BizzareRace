@@ -20,6 +20,8 @@ public class GameStateStartTimer : GameState
     public override void OnEnter()
     {
         base.OnEnter();
+        //GameObject empty = Utils.countdown();
+        startRace();
         GameEventManager.StartTimerEvent += startRace;
         Debug.Log("Entered Timer");
     }
@@ -54,4 +56,5 @@ public class GameStateStartTimer : GameState
     {
         StateManager.SetNewState(StateManager.Racing);
     }
+
 }
